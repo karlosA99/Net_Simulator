@@ -41,10 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Instructions\Instruction.cs" />
+    <Compile Include="Network_Simulator.cs" />
+    <Compile Include="Net_Components.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Instructions\" />
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{33287516-a974-458a-b51e-d87cbfd7ff12}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

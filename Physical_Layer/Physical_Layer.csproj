@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PhysicalL_Writer.cs" />
     <Compile Include="Host.cs" />
     <Compile Include="Hub.cs" />
     <Compile Include="IPLManager.cs" />

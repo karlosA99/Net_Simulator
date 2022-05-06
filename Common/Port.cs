@@ -10,7 +10,7 @@ namespace Common
     {
         
         public string Name { get; }
-        IConnector Connector { get; set; }
+        public IConnector Connector { get; set; }
         public Data DataInPort { get; private set; }
 
         public Port(string name)
@@ -27,6 +27,9 @@ namespace Common
                 Connector = null;
             }
         }
-        
+        public void Put_Bit_In_Port(Data data)
+        {
+            DataInPort = data;
+        }
     }
 }
