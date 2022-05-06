@@ -10,6 +10,10 @@ namespace ConsoleApp
     {
         static void Main(string[] args)
         {
+            List<string> a = new List<string>(1);
+
+            a.Add("dasd");
+            Console.WriteLine(a[0]);
         }
     }
 }

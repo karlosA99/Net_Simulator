@@ -11,5 +11,10 @@ namespace Common
     {
         public string Name { get; set; }
         public List<Port> Ports { get; set; }
+
+        public void ReadData(int time)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
