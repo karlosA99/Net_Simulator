@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Common;
 
 namespace Simulator.Instructions
 {
-    internal abstract class Instruction
+    public abstract class Instruction
     {
-        public int Time { get; set; }
-        public string[] Args { get; set; }
+        public int Time { get; }
+        public string[] Args { get; }
+        
         public Instruction(int time, string[] args)
         {
             Time = time;
             Args = args;
         }
-        public abstract void Exec(Net_Components nc);
+
+        public abstract void Exec(Dictionary<string,Device> devices, List<Wire> wires);
     }
 }

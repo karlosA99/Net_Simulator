@@ -9,8 +9,6 @@ namespace Physical_Layer
 {
     public class Simple_Wire : Wire
     {
-        public Simple_Wire(Port a, Port b) : base(a, b)
-        {
-        }
+        public Simple_Wire(Port a, Port b) : base(a, b) { }
     }
 }

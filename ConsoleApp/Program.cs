@@ -15,7 +15,7 @@ namespace ConsoleApp
             string path = Console.ReadLine();
             Network_Simulator simulator = new Network_Simulator();
             simulator.Path = path;
-            if(simulator.Path == null)
+            if(simulator.Path != null)
             {
                 simulator.Run_Simulation();
             }
