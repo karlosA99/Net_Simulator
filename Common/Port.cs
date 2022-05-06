@@ -20,13 +20,16 @@ namespace Common
             Connector = null;
 
         }
-        //public void Disconnect()
-        //{
-        //    if (Connector != null)
-        //    {
-        //        Connector = null;
-        //    }
-        //}
-        
+        public void Disconnect()
+        {
+            if (Connector != null)
+            {
+                Connector = null;
+            }
+        }
+        public void Put_Bit_In_Port(Data data)
+        {
+            DataInPort = data;
+        }
     }
 }

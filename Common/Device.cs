@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +10,7 @@ namespace Common
     public abstract class Device
     {
         public string Name { get; set; }
-        public List<Port> Ports { get; set; }
-
-        public void ReadData(int time)
-        {
-            throw new NotImplementedException();
-        }
+        public List<Port> Ports { get; set; } 
+        public abstract void ReadData(int time);
     }
 }

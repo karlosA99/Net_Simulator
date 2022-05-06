@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+
     <Compile Include="Instructions\ConnectI.cs" />
     <Compile Include="Instructions\CreateHostI.cs" />
     <Compile Include="Instructions\CreateHubI.cs" />

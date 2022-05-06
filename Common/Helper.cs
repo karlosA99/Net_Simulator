@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Common
 {
@@ -16,6 +17,12 @@ namespace Common
             }
         }
 
+        public static void Write_File(string path, string info)
+        {
+            StreamWriter sw = new StreamWriter(path, true);
+            sw.WriteLine(info);
+            sw.Close();
+        }
         
        
         public static Wire Get_Wire(string name1, string name2, List<Wire> wires)

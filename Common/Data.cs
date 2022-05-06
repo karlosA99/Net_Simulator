@@ -8,9 +8,9 @@ namespace Common
 {
     public enum Voltage
     {
-        Null,
         Zero,
         One,
+        Null,
         Interference
     }
     public class Data

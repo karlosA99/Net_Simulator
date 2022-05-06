@@ -11,8 +11,20 @@ namespace Physical_Layer
     {
         public Host(string name)
         {
-            this.Name = name;
-            Port a = new LAN_Port(name + "_1");
+            Name = name;
+            Port p = new LAN_Port(name + "_1");
+            Ports = new List<Port>(1);
+            Ports.Add(p);
+        }
+
+        public override void ReadData(int time)
+        {
+            Data newData = ((Simple_Wire)Ports[0].Connector).BitOnWire;
+            if (newData != Ports[0].DataInPort)
+            {
+                PhysicalL_Writer.Write_File( time, Name, Ports[0].Name, "receive", (int)newData.Voltage, false);
+                Ports[0].Put_Bit_In_Port(newData);
+            }
         }
     }
 }
