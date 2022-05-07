@@ -50,9 +50,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Simulator\Simulator.csproj">
+    <ProjectReference Include="..\Simulator\Network_Simulator.csproj">
       <Project>{522659ed-9c68-4a59-8ec4-119d59f8e2bd}</Project>
-      <Name>Simulator</Name>
+      <Name>Network_Simulator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

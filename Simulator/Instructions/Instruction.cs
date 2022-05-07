@@ -5,19 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 
-namespace Simulator.Instructions
+namespace Network_Simulator.Instructions
 {
     public abstract class Instruction
     {
-        public int Time { get; }
+        public int Exec_Time { get;}
         public string[] Args { get; }
         
         public Instruction(int time, string[] args)
         {
-            Time = time;
+            Exec_Time = time;
             Args = args;
         }
 
-        public abstract void Exec(Dictionary<string,Device> devices, List<Wire> wires);
+        public abstract void Exec(Dictionary<string,Device> devices, List<IConnector> connectors);
     }
 }

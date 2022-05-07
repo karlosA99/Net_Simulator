@@ -41,8 +41,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Duplex_Wire.cs" />
+    <Compile Include="Frame.cs" />
+    <Compile Include="Frame_Builder.cs" />
+    <Compile Include="HostLL.cs" />
     <Compile Include="ILLManager.cs" />
+    <Compile Include="Interfaces\IFrameBuilder.cs" />
+    <Compile Include="MAC_Address.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Switch.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{33287516-a974-458a-b51e-d87cbfd7ff12}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Physical_Layer\Physical_Layer.csproj">
+      <Project>{720c3b1b-3e98-48b7-9fea-6c82f36785e3}</Project>
+      <Name>Physical_Layer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

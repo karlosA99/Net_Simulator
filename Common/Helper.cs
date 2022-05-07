@@ -23,11 +23,39 @@ namespace Common
             sw.WriteLine(info);
             sw.Close();
         }
-        
-       
-        public static Wire Get_Wire(string name1, string name2, List<Wire> wires)
+        public static List<string> Read_File(string path)
         {
-            foreach (var item in wires)
+            StreamReader sr = new StreamReader(path);
+            List<string> lines = new List<string>();
+            string line = sr.ReadLine();
+            while (line != null)
+            {
+                lines.Add(line);
+                line = sr.ReadLine();
+            }
+            sr.Close();
+            return lines;
+
+        }
+
+        public static int Binary_To_Int(string data_size)
+        {
+            char[] array = data_size.ToCharArray();
+            int ans = 0;
+
+            for (int i = array.Length - 1; i >= 0; i--)
+            {
+                if (array[i] == '1')
+                {
+                    ans += (int)Math.Pow(2, i);
+                }
+            }
+            return ans;
+        }
+
+        public static IConnector Get_Wire(string name1, string name2, List<IConnector> connectors)
+        {
+            foreach (var item in connectors)
             {
                 string host1 = item.A.Name.Split('_')[0];
                 string host2 = item.B.Name.Split('_')[0];
@@ -70,7 +98,7 @@ namespace Common
         }
 
         public static Dictionary<string, List<Device>> Get_AdjacencyList
-                                                            (Dictionary<string, Device> devices, List<Wire> wires)
+                                                            (Dictionary<string, Device> devices, List<IConnector> connectors)
         {
             Dictionary<string, List<Device>> adj = new Dictionary<string, List<Device>>();
             string name_d1;
@@ -79,7 +107,7 @@ namespace Common
             {
                 adj.Add(item, new List<Device>());
             }
-            foreach (Wire item in wires)
+            foreach (Wire item in connectors)
             {
                 name_d1 = item.A.Name.Split('_')[0];
                 name_d2 = item.B.Name.Split('_')[0];
@@ -88,6 +116,8 @@ namespace Common
             }
             return adj;
         }
+
+
 
     }
 }

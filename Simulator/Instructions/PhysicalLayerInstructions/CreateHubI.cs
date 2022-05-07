@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Common;
 using Physical_Layer;
 
-namespace Simulator.Instructions
+namespace Network_Simulator.Instructions
 {
     public class CreateHubI : Instruction
     {
         public CreateHubI(int time, string[] args) : base(time, args) { }
 
-        public override void Exec(Dictionary<string, Device> devices, List<Wire> wires)
+        public override void Exec(Dictionary<string, Device> devices, List<IConnector> conectors)
         {
             Hub h = new Hub(Args[0], int.Parse(Args[1]));
             devices.Add(h.Name, h);

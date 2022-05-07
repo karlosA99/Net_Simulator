@@ -7,12 +7,17 @@ using Common;
 
 namespace Physical_Layer
 {
-    internal class PhysicalL_Writer
+    public class PhysicalL_Writer
     {
-        internal static void Write_File(int time, string device_name, string port_name, string action, int voltage, bool collision)
+        public static void Write_File(int time, string device_name, string port_name, string action, int voltage, bool collision)
         {
+            string collisionSTR = "ok";
+            if (collision)
+            {
+                collisionSTR = "collision";
+            }
             string path = "Data\\" + device_name + ".txt";
-            string info = time.ToString() + " " + port_name + " " + action + " " + voltage.ToString() + " " + collision;
+            string info = time.ToString() + " " + port_name + " " + action + " " + voltage.ToString() + " " + collisionSTR;
             Helper.Write_File(path, info);
         }
     }

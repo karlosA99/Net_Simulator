@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Simulator;
+using Network_Simulator;
 
 namespace ConsoleApp
 {
@@ -13,7 +13,7 @@ namespace ConsoleApp
         {
             Console.WriteLine("Enter the read address");
             string path = Console.ReadLine();
-            Network_Simulator simulator = new Network_Simulator();
+            Simulator simulator = new Simulator();
             simulator.Path = path;
             if(simulator.Path != null)
             {

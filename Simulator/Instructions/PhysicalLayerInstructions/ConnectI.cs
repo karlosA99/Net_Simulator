@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Common;
 using Physical_Layer;
 
-namespace Simulator.Instructions
+namespace Network_Simulator.Instructions
 {
     public class ConnectI : Instruction
     {
         public ConnectI(int time, string[] args) : base(time, args) { }
 
-        public override void Exec(Dictionary<string, Device> devices, List<Wire> wires)
+        public override void Exec(Dictionary<string, Device> devices, List<IConnector> connectors)
         {
             string[] aux = Args[0].Split('_');
             Device device = devices[aux[0]];
@@ -25,7 +25,7 @@ namespace Simulator.Instructions
             Wire wire = new Simple_Wire(port1, port2);
             port1.Connector = wire;
             port2.Connector = wire;
-            wires.Add(wire);
+            connectors.Add(wire);
         }
     }
 }

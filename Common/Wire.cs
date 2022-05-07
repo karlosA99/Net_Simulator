@@ -12,8 +12,8 @@ namespace Common
         
         public Data BitOnWire { get; set; }
         
-        public Port A { get => A; private set => A = value; }
-        public Port B { get => B; private set => B = value; }
+        public Port A { get; set; }
+        public Port B { get; set; }
 
         public Wire(Port a, Port b)
         {

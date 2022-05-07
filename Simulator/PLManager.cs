@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Physical_Layer;
 using Common;
 
-namespace Simulator
+namespace Network_Simulator
 {
     public class PLManager : IPLManager
     {
