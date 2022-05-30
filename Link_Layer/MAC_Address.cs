@@ -6,24 +6,34 @@ using System.Threading.Tasks;
 
 namespace Link_Layer
 {
-    public class MAC_Address
+    public class MAC_Address : IComparable<MAC_Address>
     {
-        public bool[] Address { get; }
+        public string Address { get; }
 
         public MAC_Address(string address)
         {
-            Address = String_To_Bytes(address);
+            if (address.Length == 4)
+            {
+                Address = address;
+            }
+            else
+                throw new ArgumentOutOfRangeException(address);
         }
 
-        private bool[] String_To_Bytes(string address)
+        public int CompareTo(MAC_Address other)
         {
-            bool[] aux = new bool[address.Length];
-            for (int i = 0; i < address.Length; i++)
-            {
-                int temp = int.Parse(address[i].ToString());
-                aux[i] = true ? temp == 1 : false;
-            }
-            return aux;
+            return Address.CompareTo(other.Address);
         }
+
+        //private bool[] String_To_Bytes(string address)
+        //{
+        //    bool[] aux = new bool[address.Length];
+        //    for (int i = 0; i < address.Length; i++)
+        //    {
+        //        int temp = int.Parse(address[i].ToString());
+        //        aux[i] = true ? temp == 1 : false;
+        //    }
+        //    return aux;
+        //}
     }
 }

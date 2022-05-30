@@ -11,14 +11,37 @@ namespace Link_Layer
     {
         public MAC_Address Transmiter { get;}
         public MAC_Address Receiver { get;}
-        public Data[] Datas { get; }
-        public int[] Verification { get; }
+        public string Data_Length { get; }
+        public string Verification_Length { get; }
+        public string Datas { get; }
+        public string Verification { get; }
 
-        public Frame(string receiver, string transmiter, Data[] data, int[] verification_data)
+        public Frame(MAC_Address receiver, MAC_Address transmiter,string data_length,string verification_length, string data, string verification_data)
         {
-            Transmiter = new MAC_Address(transmiter);
-            Receiver = new MAC_Address(receiver);
-            Datas = data;
+            Transmiter = transmiter;
+            Receiver = receiver;
+
+            if (data_length.Length > 8)
+                throw new ArgumentOutOfRangeException("Data length is out of range");
+            else
+            {
+                while (data_length.Length < 8)
+                {
+                    data_length = "0" + data_length;
+                }
+                Data_Length = data_length;
+            }
+                
+
+            if(verification_length.Length > 8)
+                throw new ArgumentOutOfRangeException("Verification length is out of range");
+            else
+                Verification_Length = verification_length;
+
+            if (Helper.Binary_To_Int(Data_Length) != data.Length/2)
+                throw new Exception("Data_Length is diferent from Data.Legth");
+            else
+                Datas = data;
             Verification = verification_data;
         }
     }

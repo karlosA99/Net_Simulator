@@ -44,7 +44,7 @@
     <Compile Include="Instructions\PhysicalLayerInstructions\ConnectI.cs" />
     <Compile Include="Instructions\PhysicalLayerInstructions\CreateHostI.cs" />
     <Compile Include="Instructions\PhysicalLayerInstructions\CreateHubI.cs" />
-    <Compile Include="Instructions\LinkLayerInstructions\CreateSwitch.cs" />
+    <Compile Include="Instructions\LinkLayerInstructions\CreateSwitchI.cs" />
     <Compile Include="Instructions\PhysicalLayerInstructions\DisconnectI.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\LinkLayerInstructions\SendFrameI.cs" />

@@ -8,16 +8,20 @@ namespace Common
 {
     public enum Voltage
     {
-        Zero,
+        zero,
         One,
         Null,
         Interference
     }
     public class Data
     {
-        public Voltage Voltage { get; set; }
-        public Data(Voltage volt)
+        public int Voltage { get; set; }
+        public Data(int volt)
         {
+            if(volt != 0 && volt != 1)
+            {
+                throw new ArgumentOutOfRangeException("Voltage is only 0 or 1");
+            }
             this.Voltage = volt;
         }
         

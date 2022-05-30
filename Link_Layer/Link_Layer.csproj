@@ -43,10 +43,11 @@
   <ItemGroup>
     <Compile Include="Duplex_Wire.cs" />
     <Compile Include="Frame.cs" />
-    <Compile Include="Frame_Builder.cs" />
     <Compile Include="HostLL.cs" />
     <Compile Include="ILLManager.cs" />
     <Compile Include="Interfaces\IFrameBuilder.cs" />
+    <Compile Include="Interfaces\ILinkLayerDev.cs" />
+    <Compile Include="LinkL_Writer.cs" />
     <Compile Include="MAC_Address.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Switch.cs" />

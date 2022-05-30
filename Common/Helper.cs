@@ -38,19 +38,129 @@ namespace Common
 
         }
 
-        public static int Binary_To_Int(string data_size)
+        public static int Binary_To_Int(string data)
         {
-            char[] array = data_size.ToCharArray();
+            char[] array = data.ToCharArray();
             int ans = 0;
 
             for (int i = array.Length - 1; i >= 0; i--)
             {
                 if (array[i] == '1')
                 {
-                    ans += (int)Math.Pow(2, i);
+                    ans += (int)Math.Pow(2, array.Length - i - 1);
                 }
             }
             return ans;
+        }
+        public static string Int_To_Binary(int data)
+        {
+            string result = "";
+            while (data > 0)
+            {
+                int reminder = data % 2;
+                if (reminder == 0)
+                    result = "0" + result;
+                else if (reminder == 1)
+                    result = "1" + result;
+                data /= 2;
+            }
+            return result;
+        }
+
+        public static string Binary_To_Hex(string data)
+        {
+            string result = "";
+            for (int i = 0; i < data.Length; i += 4)
+            {
+                int aux = Binary_To_Int(data.Substring(i, 4));
+                if (aux < 10)
+                {
+                    result += aux.ToString();
+                }
+                else
+                {
+                    switch (aux)
+                    {
+                        case 10:
+                            result += "A";
+                            break;
+                        case 11:
+                            result += "B";
+                            break;
+                        case 12:
+                            result += "C";
+                            break;
+                        case 13:
+                            result += "D";
+                            break;
+                        case 14:
+                            result += "E";
+                            break;
+                        case 15:
+                            result += "F";
+                            break;
+                        default:
+                            throw new Exception("Binary Data out of range");
+                    }
+                }
+            }
+            return result;
+        }
+
+        public static Device Adjacent_Port(Port port, Dictionary<string, Device> devices)
+        {
+            IConnector wire = port.Connector;
+            string device_name;
+            if (wire.A.Name != port.Name)
+            {
+                device_name = wire.A.Name;
+            }
+            else
+            {
+                device_name = wire.A.Name;
+            }
+            device_name = device_name.Substring(0, device_name.Length - 2);
+            Device result = devices[device_name];
+            return result;
+        }
+
+        public static string Hex_To_Binary(string data)
+        {
+            string result = "";
+            for (int i = 0; i < data.Length; i++)
+            {
+                char temp = data[i];
+                switch (temp)
+                {
+                    case 'A':
+                        result = result + Int_To_Binary(10);
+                        break;
+                    case 'B':
+                        result = result + Int_To_Binary(11);
+                        break;
+                    case 'C':
+                        result = result + Int_To_Binary(12);
+                        break;
+                    case 'D':
+                        result = result + Int_To_Binary(13);
+                        break;
+                    case 'E':
+                        result = result + Int_To_Binary(14);
+                        break;
+                    case 'F':
+                        result = result + Int_To_Binary(15);
+                        break;
+                    default:
+                        string aux = Int_To_Binary(int.Parse(temp.ToString()));
+                        while (aux.Length < 4)
+                        {
+                            aux = "0" + aux;
+                        }
+                        result = result + aux;
+                        break;
+                }
+            }
+            return result;
         }
 
         public static IConnector Get_Wire(string name1, string name2, List<IConnector> connectors)

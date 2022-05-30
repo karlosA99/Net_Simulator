@@ -10,6 +10,8 @@ namespace Network_Simulator.Instructions
 {
     public class SendI : Instruction
     {
+        public event BitRecived OnBitRecived;
+        public event DataSent OnDataSent;
 
         public int Pointer { get; set; }
         private Data data;
@@ -18,16 +20,16 @@ namespace Network_Simulator.Instructions
         {
             Pointer = 0;
             int volt = int.Parse(Args[1][Pointer].ToString());
-            data = new Data((Voltage)volt);
+            data = new Data(volt);
         }
 
         public override void Exec(Dictionary<string, Device> devices, List<IConnector> connectors)
         {
             Device transmitter = devices[Args[0]];
-            PhysicalL_Writer.Write_File(Exec_Time, transmitter.Name, transmitter.Ports[0].Name, "send", (int)data.Voltage, false);
-
+            
             while (Pointer != Args[1].Length)
             {
+                PhysicalL_Writer.Write_File(Exec_Time, transmitter.Name, transmitter.Ports[0].Name, "send", (int)data.Voltage, false);
                 int i_time = Simulator.signal_time;
                 while (i_time > 0)
                 {
@@ -36,13 +38,15 @@ namespace Network_Simulator.Instructions
                     i_time--;
                     Simulator.Time++;
                 }
-                Pointer++;
+                OnBitRecived(data);
+                Pointer++;                                      
                 if (Pointer < Args[1].Length)
                 {
                     int volt = int.Parse(Args[1][Pointer].ToString());
-                    data = new Data((Voltage)volt);
+                    data = new Data(volt);
                 }
             }
+            OnDataSent(Exec_Time);
         }
         private void BFS(Dictionary<string, Device> devices, List<IConnector> connectors, Device start, Data data)
         {

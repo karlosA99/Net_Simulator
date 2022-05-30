@@ -37,10 +37,7 @@ namespace Network_Simulator
                 if(current.Exec_Time <= Time)
                 {
                     current.Exec(devices, connectors);
-                    //if(current is SendI)
-                    //{
-                    //    Time--;
-                    //}
+                    
                     if (Instructions.Count > 0)
                     {
                         current = Instructions.Dequeue();
@@ -68,6 +65,7 @@ namespace Network_Simulator
                     case "connect":
                         i = new ConnectI(time, aux);
                         break;
+
                     case "create":
                         aux = new string[temp.Length - 3];
                         Array.Copy(temp, 3, aux, 0, aux.Length);
@@ -78,13 +76,26 @@ namespace Network_Simulator
                         else if (temp[2] == "host")
                             i = new CreateHostI(time, aux);
 
+                        else if(temp[2]== "switch")
+                            i = new CreateSwitchI(time, aux);
+
                         break;
+                    case "mac":
+                        i = new SetMacI(time, aux);
+                        break;
+
                     case "disconnect":
                         i = new DisconnectI(time, aux);
                         break;
+
                     case "send":
                         i = new SendI(time, aux);
                         break;
+
+                    case "send_frame":
+                        i = new SendFrameI(time, aux);
+                        break;
+
                     default:
                         break;
                 }
