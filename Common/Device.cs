@@ -7,10 +7,17 @@ using System.Threading.Tasks;
 
 namespace Common
 {
+    public delegate void DataSent();
+    public delegate void BitSent(Data bit);
+
     public abstract class Device
     {
+        public abstract event BitSent OnBitSent;
+        public abstract event DataSent OnDataSent;
         public string Name { get; set; }
-        public List<Port> Ports { get; set; } 
+        public List<Port> Ports { get; set; }
         public abstract void ReadData(int time);
+
+        public abstract void SendData(Data data, int signal_time);
     }
 }

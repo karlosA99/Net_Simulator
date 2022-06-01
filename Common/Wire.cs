@@ -9,7 +9,6 @@ namespace Common
     
     public abstract class Wire : IConnector
     {
-        
         public Data BitOnWire { get; set; }
         
         public Port A { get; set; }
@@ -20,7 +19,5 @@ namespace Common
             this.A = a;
             this.B = b;
         }
-
-        
     }
 }

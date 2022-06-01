@@ -69,5 +69,10 @@ namespace Link_Layer
         {
             Bits_Recived.Add(bit);
         }
+
+        public void SendFrame(Frame frame)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

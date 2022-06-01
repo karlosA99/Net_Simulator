@@ -5,80 +5,62 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Physical_Layer;
+using Network_Simulator;
 
 namespace Network_Simulator.Instructions
 {
     public class SendI : Instruction
     {
-        public event BitRecived OnBitRecived;
-        public event DataSent OnDataSent;
-
-        public int Pointer { get; set; }
-        private Data data;
+        private Queue<Device> receivers;
+        private Queue<Device> transmitters;
 
         public SendI(int time, string[] args) : base(time, args)
         {
-            Pointer = 0;
-            int volt = int.Parse(Args[1][Pointer].ToString());
-            data = new Data(volt);
+            receivers = new Queue<Device>();
+            transmitters = new Queue<Device>();
         }
 
         public override void Exec(Dictionary<string, Device> devices, List<IConnector> connectors)
         {
-            Device transmitter = devices[Args[0]];
-            
-            while (Pointer != Args[1].Length)
-            {
-                PhysicalL_Writer.Write_File(Exec_Time, transmitter.Name, transmitter.Ports[0].Name, "send", (int)data.Voltage, false);
-                int i_time = Simulator.signal_time;
-                while (i_time > 0)
-                {
-                    ///el bfs pone en los cables que alcanza el dato que se esta transmitiendo
-                    BFS(devices, connectors, transmitter, data);
-                    i_time--;
-                    Simulator.Time++;
-                }
-                OnBitRecived(data);
-                Pointer++;                                      
-                if (Pointer < Args[1].Length)
-                {
-                    int volt = int.Parse(Args[1][Pointer].ToString());
-                    data = new Data(volt);
-                }
-            }
-            OnDataSent(Exec_Time);
-        }
-        private void BFS(Dictionary<string, Device> devices, List<IConnector> connectors, Device start, Data data)
-        {
-            Dictionary<string, bool> visited = Helper.Get_Falsev(devices);
-            Dictionary<string, int> d = Helper.Get_Negd(devices);
-            Dictionary<string, Device> pi = Helper.Get_NullPi(devices);
-
             Dictionary<string, List<Device>> adj = Helper.Get_AdjacencyList(devices, connectors);
+            string data = Args[1];
 
-            Queue<Device> q = new Queue<Device>();
-            q.Enqueue(start);
-            visited[start.Name] = true;
-            d[start.Name] = 0;
-            pi[start.Name] = null;
-
-            while (q.Count != 0)
+            int pointer = 0;
+            while (pointer < data.Length)
             {
-                Device u = q.Dequeue();
-                foreach (Device v in adj[u.Name])
+                transmitters.Enqueue(devices[Args[0]]);
+                Dictionary<string, int> d = Helper.Get_Negd(devices);
+                d[transmitters.Peek().Name] = 0;
+
+                while (transmitters.Count > 0)
                 {
-                    if (d[v.Name] == -1)
+                    Device transmitter = transmitters.Dequeue();
+                    foreach (Device v in adj[transmitter.Name])
                     {
-                        //aqui descubrimos un nuevo nodo hay que ver que se hace, por ahora poner Data en el cable(arista)
-                        //mas adelante el dato se envia a una pc en especifico, en ese caso cuando la encontremos paramos
-                        d[v.Name] = d[u.Name] + 1;
-                        pi[v.Name] = u;
-                        q.Enqueue(v);
-                        IConnector w = Helper.Get_Wire(u.Name, v.Name, connectors);
-                        ((Wire)w).BitOnWire = data;
-                        v.ReadData(Exec_Time);///Time es el tiempo simulado del proyecto, hay que ver donde se pone
+                        if (d[v.Name] == -1)
+                        {
+                            d[v.Name] = d[transmitter.Name] + 1;
+                            receivers.Enqueue(v);
+                        }
                     }
+                    transmitter.OnBitSent += new BitSent(ReadBit);
+                    Data toSend = new Data(int.Parse(data[pointer].ToString()));
+                    transmitter.SendData(toSend, Simulator.signal_time); ;
                 }
+                pointer++;
+                Helper.ClearBitInWires(connectors);
+            }            
+        }
+
+        private void ReadBit(Data bit)
+        {
+            foreach(Device dev in receivers)
+            {
+                dev.ReadData(Exec_Time);
+            }
+            while (receivers.Count > 0)
+            {
+                transmitters.Enqueue(receivers.Dequeue());
             }
         }
     }

@@ -10,8 +10,8 @@ using Link_Layer.Interfaces;
 
 namespace Network_Simulator.Instructions
 {
-    public delegate void BitRecived(Data bit);
-    public delegate void DataSent(int time);
+    
+    
 
     public class SendFrameI : Instruction
     {
@@ -40,18 +40,7 @@ namespace Network_Simulator.Instructions
             {
                 Device transmitter = transmitters.Dequeue();
                 string[] args = { transmitter.Name, arg2 };
-                SendI sendI = new SendI(Exec_Time, args);
                 
-
-                if(transmitter is Switch)
-                {
-                    Switch aux = (Switch)transmitter;
-                    if (aux.PortOfMAC(frame.Receiver) != null)
-                    {
-                        Device next = Helper.Adjacent_Port(aux.PortOfMAC(frame.Receiver),devices); 
-                        receivers.Enqueue(next);
-                    }
-                }
                 foreach (Device v in adj[transmitter.Name])
                 {
                     if(d[v.Name] == -1)
@@ -60,9 +49,6 @@ namespace Network_Simulator.Instructions
                         receivers.Enqueue(v);
                     }
                 }
-                sendI.OnBitRecived += new BitRecived(ReadBit);
-                sendI.OnDataSent += new DataSent(ReadData);
-                sendI.Exec(devices, connectors);
             }            
         }
         private Frame Build_Frame(Dictionary<string, Device> devices)
@@ -75,14 +61,14 @@ namespace Network_Simulator.Instructions
             return frame;
         }
 
-        private void ReadData(int time)
+        private void ReadData()
         {
             while (receivers.Count > 0)
             {
                 Device dev = receivers.Dequeue();
                 if (dev is HostLL || dev is Switch)
                 {
-                    ((ILinkLayerDev)dev).ReadFrame(time);
+                    //((ILinkLayerDev)dev).ReadFrame(time);
                 }
                 transmitters.Enqueue(dev);
             }
@@ -94,7 +80,7 @@ namespace Network_Simulator.Instructions
                 if (dev is ILinkLayerDev)
                 {
                     ILinkLayerDev aux = (ILinkLayerDev)dev;
-                    aux.ReadBit(bit);
+                    //aux.ReadBit(bit);
                 }
             }
         }

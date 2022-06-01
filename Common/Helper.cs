@@ -9,7 +9,7 @@ namespace Common
 {
     public class Helper
     {
-        public static void ClearBitInWires(List<Wire> wires)
+        public static void ClearBitInWires(List<IConnector> wires)
         {
             foreach (Wire item in wires)
             {

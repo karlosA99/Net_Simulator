@@ -7,8 +7,12 @@ using Common;
 
 namespace Physical_Layer
 {
+    
+
     public class Hub : Device
     {
+        public override event BitSent OnBitSent;
+        public override event DataSent OnDataSent;
 
         public Hub(string name, int ports_count)
         {
@@ -33,24 +37,28 @@ namespace Physical_Layer
                     receiving_port = item;
                 }
             }
-            Simple_Wire wire_in_port = (Simple_Wire)receiving_port.Connector;
-            if (receiving_port.DataInPort != wire_in_port.BitOnWire)
-            {
-                receiving_port.Put_Bit_In_Port(wire_in_port.BitOnWire);
-                PhysicalL_Writer.Write_File(time, Name, receiving_port.Name, "receive", (int)receiving_port.DataInPort.Voltage, false);
-                foreach (LAN_Port item in Ports)
-                {
-                    if (item.Connector != null)
-                    {
+            receiving_port.Put_Bit_In_Port(((Simple_Wire)receiving_port.Connector).BitOnWire);
+            PhysicalL_Writer.Write_File(time, Name, receiving_port.Name, "receive", (int)receiving_port.DataInPort.Voltage, false);
+            
+        }
 
-                        if (receiving_port.Name != item.Name)
-                        {
-                            item.Put_Bit_In_Port(wire_in_port.BitOnWire);
-                            PhysicalL_Writer.Write_File(time, Name, item.Name, "send", (int)receiving_port.DataInPort.Voltage, false);
-                        }
+        public override void SendData(Data data, int signal_time)
+        {
+            int i_time = signal_time;//este int es un clone de signal_time que se puede modificar sin afectar a signal_time
+            while (i_time > 0)
+            {
+                foreach (Port p in Ports)
+                {
+                    if (p.Connector != null && ((Wire)p.Connector).BitOnWire == null)
+                    {
+                        IConnector aux = p.Connector;
+                        ((Wire)aux).BitOnWire = data;
+                        PhysicalL_Writer.Write_File(12, Name, p.Name, "send", data.Voltage, false);
                     }
                 }
+                i_time--;
             }
+            OnBitSent(data);
         }
     }
 }

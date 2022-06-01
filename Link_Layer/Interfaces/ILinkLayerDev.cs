@@ -11,7 +11,7 @@ namespace Link_Layer.Interfaces
     {
         Frame Frame_Recived { get; set; }
 
-        void ReadBit(Data bit);
         void ReadFrame(int time);
+        void SendFrame(Frame frame);
     }
 }
