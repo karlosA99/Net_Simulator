@@ -7,13 +7,11 @@ using Common;
 
 namespace Physical_Layer
 {
-    
+
 
     public class Hub : Device
     {
-        public override event BitSent OnBitSent;
-        public override event DataSent OnDataSent;
-
+        private Port receiving_port;
         public Hub(string name, int ports_count)
         {
             Name = name;
@@ -22,43 +20,28 @@ namespace Physical_Layer
             for (int i = 1; i <= ports_count; i++)
             {
                 p = new LAN_Port(name + "_" + i);
+                p.OnDataReceived += new DataReceived(ReadData);
                 Ports.Add(p);
             }
         }
 
-        public override void ReadData(int time)
+        public override void ReadData(Data data, Port p)
         {
-            LAN_Port receiving_port = null;
-
-            foreach (LAN_Port item in Ports)
-            {
-                if (item.Connector != null && ((Simple_Wire)item.Connector).BitOnWire != null)
-                {
-                    receiving_port = item;
-                }
-            }
-            receiving_port.Put_Bit_In_Port(((Simple_Wire)receiving_port.Connector).BitOnWire);
-            PhysicalL_Writer.Write_File(time, Name, receiving_port.Name, "receive", (int)receiving_port.DataInPort.Voltage, false);
-            
+            receiving_port = p;
+            PhysicalL_Writer.Write_File(1, Name, receiving_port.Name, "receive", receiving_port.DataInPort.Voltage, false);
+            SendData(data, 1);
         }
 
         public override void SendData(Data data, int signal_time)
         {
-            int i_time = signal_time;//este int es un clone de signal_time que se puede modificar sin afectar a signal_time
-            while (i_time > 0)
+            foreach (Port p in Ports)
             {
-                foreach (Port p in Ports)
+                if (!p.Equals(receiving_port) && p.Connector != null)
                 {
-                    if (p.Connector != null && ((Wire)p.Connector).BitOnWire == null)
-                    {
-                        IConnector aux = p.Connector;
-                        ((Wire)aux).BitOnWire = data;
-                        PhysicalL_Writer.Write_File(12, Name, p.Name, "send", data.Voltage, false);
-                    }
+                    PhysicalL_Writer.Write_File(12, Name, p.Name, "send", data.Voltage, false);
+                    p.Put_Bit_In_Port(data);
                 }
-                i_time--;
             }
-            OnBitSent(data);
         }
     }
 }

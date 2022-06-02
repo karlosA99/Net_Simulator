@@ -18,6 +18,17 @@ namespace Common
         {
             this.A = a;
             this.B = b;
+            //a.OnDataInPort += new DataInPort(ReceiveData);
+            //b.OnDataInPort += new DataInPort(ReceiveData);
+        }
+
+        public void ReceiveData(Data data, Port p)
+        {
+            BitOnWire = data;
+            if (A.Equals(p))
+                B.ReceiveData(data);
+            else
+                A.ReceiveData(data);
         }
     }
 }
