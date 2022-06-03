@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Network_Simulator.Instructions;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace Network_Simulator
 {
@@ -12,7 +14,7 @@ namespace Network_Simulator
     {
         private Dictionary<string, Device> devices;
         private List<IConnector> connectors;
-        public static int signal_time;
+        public int signal_time;
         private bool finished;
 
         public static int Time { get; set; }
@@ -21,7 +23,7 @@ namespace Network_Simulator
 
         public Simulator()
         {
-            signal_time = 2;
+            signal_time = int.Parse(ConfigurationManager.AppSettings.Get("signal_time"));
             finished = false;
             devices = new Dictionary<string, Device>();
             connectors = new List<IConnector>();

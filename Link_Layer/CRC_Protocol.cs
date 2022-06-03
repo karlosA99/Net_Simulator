@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
+using System.Collections.Specialized;
 
 namespace Link_Layer
 {
@@ -12,7 +14,7 @@ namespace Link_Layer
 
         public CRC_Protocol()
         {
-            generator_polinomial = "10011";
+            generator_polinomial = ConfigurationManager.AppSettings.Get("generator_polinomial");
         }
 
         public string Generate_Verification_Data(string data)
