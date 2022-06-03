@@ -15,7 +15,6 @@ namespace Link_Layer
         private int frame_length;
         private List<Data> Datas_Recived;
         private Port receiving_port;
-        List<Port> transmitters_ports;
 
         Dictionary<MAC_Address, Port> knewMACs;
         public Frame Frame_Recived { get; set; }
@@ -67,7 +66,7 @@ namespace Link_Layer
                 int aux = Helper.Binary_To_Int(data_length);
                 string verification_length = StringExtractor(40, 48);
                 int aux2 = Helper.Binary_To_Int(verification_length);
-                frame_length = 48 + aux * 8 + aux2 * 8;
+                frame_length = 48 + aux * 8 + aux2;
             }
             if (data_counter == frame_length)
             {
@@ -103,7 +102,7 @@ namespace Link_Layer
             string verification_length = StringExtractor(40, 48);
             int aux2 = Helper.Binary_To_Int(verification_length);
             string datas = Helper.Binary_To_Hex(StringExtractor(48, 48 + aux * 8));
-            string verification = StringExtractor(48 + aux * 8, 48 + aux * 8 + aux2 * 8);
+            string verification = StringExtractor(48 + aux * 8, 48 + aux * 8 + aux2);
 
             Frame_Recived = new Frame(mac1, mac2, data_length, verification_length, datas, verification);
 
@@ -127,8 +126,6 @@ namespace Link_Layer
             datas += frame.Verification_Length;
             datas += Helper.Hex_To_Binary(frame.Datas);
             datas += frame.Verification;
-
-            transmitters_ports = new List<Port>();
 
             if (knewMACs.ContainsKey(frame.Receiver))
             {

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CRC_Protocol.cs" />
     <Compile Include="Duplex_Wire.cs" />
     <Compile Include="Frame.cs" />
     <Compile Include="HostLL.cs" />

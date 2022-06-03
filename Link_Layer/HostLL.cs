@@ -48,12 +48,15 @@ namespace Link_Layer
                 int aux = Helper.Binary_To_Int(data_length);
                 string verification_length = StringExtractor(40, 48);
                 int aux2 = Helper.Binary_To_Int(verification_length);
-                string datas = Helper.Binary_To_Hex(StringExtractor(48, 48 + aux * 8));
-                string verification = StringExtractor(48 + aux * 8, 48 + aux * 8 + aux2 * 8);
+                string binary_data = StringExtractor(48, 48 + aux * 8);
+                string datas = Helper.Binary_To_Hex(binary_data);
+                string verification = StringExtractor(48 + aux * 8, 48 + aux * 8 + aux2);
 
                 Frame_Recived = new Frame(mac1, mac2, data_length, verification_length, datas, verification);
+                CRC_Protocol crc = new CRC_Protocol();
+                bool error = int.Parse(crc.Division_Reminder(binary_data+verification)) != 0;
 
-                LinkL_Writer.Write_File(time, Name, Frame_Recived.Transmiter, Frame_Recived.Datas, false);
+                LinkL_Writer.Write_File(time, Name, Frame_Recived.Transmiter, Frame_Recived.Datas, error);
             }
 
         }
@@ -94,7 +97,7 @@ namespace Link_Layer
                 int aux = Helper.Binary_To_Int(data_length);
                 string verification_length = StringExtractor(40, 48);
                 int aux2 = Helper.Binary_To_Int(verification_length);
-                frame_length = 48 + aux * 8 + aux2 * 8;
+                frame_length = 48 + aux * 8 + aux2;
             }
             if (data_counter == frame_length)
             {
