@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Physical_Layer;
 using Common;
 using Link_Layer.Interfaces;
+using System.Configuration;
 
 namespace Link_Layer
 {
@@ -15,6 +16,7 @@ namespace Link_Layer
         private int data_counter;
         private int frame_length;
         private List<Data> Datas_Recived;
+        public int signal_time;
 
         public MAC_Address MAC { get; private set; }
         public Frame Frame_Recived { get; set; }
@@ -23,6 +25,7 @@ namespace Link_Layer
         {
             Datas_Recived = new List<Data>();
             data_counter = 0;
+            signal_time = 10;
         }
 
         public void SetMAC(string mAC_Address)
@@ -37,12 +40,16 @@ namespace Link_Layer
             }
         }
 
-        public void ReadFrame(int time)
+        public void ReadFrame(int port_number)
         {
             MAC_Address mac1 = new MAC_Address(Helper.Binary_To_Hex(StringExtractor(0, 16)));
             if (mac1.CompareTo(MAC) == 0 || mac1.Address=="FFFF")
             //Si la MAC es FFFF significa que esta dirigida a todo el mundo (broadcast)
             {
+                if(mac1.CompareTo(MAC) == 0)
+                {
+                    SendData(new Data(1));       //Si este Host tiene la MAC de dstino responde con 1 para confirmar su recepcion
+                }
                 MAC_Address mac2 = new MAC_Address(Helper.Binary_To_Hex(StringExtractor(16, 32)));
                 string data_length = StringExtractor(32, 40);
                 int aux = Helper.Binary_To_Int(data_length);
@@ -56,7 +63,7 @@ namespace Link_Layer
                 CRC_Protocol crc = new CRC_Protocol();
                 bool error = int.Parse(crc.Division_Reminder(binary_data+verification)) != 0;
 
-                LinkL_Writer.Write_File(time, Name, Frame_Recived.Transmiter, Frame_Recived.Datas, error);
+                LinkL_Writer.Write_File(Clock, Name, Frame_Recived.Transmiter, Frame_Recived.Datas, error);
             }
 
         }
@@ -82,7 +89,10 @@ namespace Link_Layer
             for (int i = 0; i < datas.Length; i++)
             {
                 Data data = new Data(int.Parse(datas[i].ToString()));
-                SendData(data, 1);
+                for (int j = signal_time; j > 0; j--)
+                {
+                    SendData(data);
+                }
             }
         }
 

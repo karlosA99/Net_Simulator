@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Instructions\CreateI.cs" />
     <Compile Include="Instructions\PhysicalLayerInstructions\ConnectI.cs" />
     <Compile Include="Instructions\PhysicalLayerInstructions\CreateHostI.cs" />
     <Compile Include="Instructions\PhysicalLayerInstructions\CreateHubI.cs" />

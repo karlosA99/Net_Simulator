@@ -14,16 +14,18 @@ namespace Network_Simulator
     {
         private Dictionary<string, Device> devices;
         private List<IConnector> connectors;
-        public int signal_time;
+        
         private bool finished;
 
         public static int Time { get; set; }
+
+        public static int Signal_Time = 10;
         public string Path { get; set; }
         internal Queue<Instruction> Instructions { get; set; }
 
         public Simulator()
         {
-            signal_time = int.Parse(ConfigurationManager.AppSettings.Get("signal_time"));
+            Signal_Time = int.Parse(ConfigurationManager.AppSettings.Get("signal_time"));
             finished = false;
             devices = new Dictionary<string, Device>();
             connectors = new List<IConnector>();
@@ -33,12 +35,16 @@ namespace Network_Simulator
         {
             Instructions = Build_Instructions(Helper.Read_File(Path));
             Instruction current = Instructions.Dequeue();
-            int i_time = signal_time;
             while (!finished)
             {
                 if(current.Exec_Time <= Time)
                 {
+                    if (current is CreateI)
+                    {
+                        ((CreateI)current).OnNewDevice += new NewDevice(SubscribeDev);
+                    }
                     current.Exec(devices, connectors);
+                    
                     
                     if (Instructions.Count > 0)
                     {
@@ -49,9 +55,18 @@ namespace Network_Simulator
                         finished = true;
                     }
                 }
-                Time++;
+                else
+                {
+                    ClockTick();
+                }
             }
         }
+
+        private void SubscribeDev(Device dev)
+        {
+            dev.OnDataSent+= new DataSent(ClockTick);
+        }
+
         public static Queue<Instruction> Build_Instructions(List<string> lines)
         {
             List<Instruction> q = new List<Instruction>();
@@ -105,6 +120,15 @@ namespace Network_Simulator
             }
             q = q.OrderBy(p => p.Exec_Time).ToList();
             return new Queue<Instruction>(q);
+        }
+        public void ClockTick()
+        {
+            Time++;
+            ICollection<string> aux = devices.Keys;
+            foreach (string key in aux)
+            {
+                devices[key].ClockTick();
+            }
         }
     }
 }

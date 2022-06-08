@@ -7,9 +7,12 @@ using Common;
 
 namespace Physical_Layer
 {
+    
     public class Host : Device
     {
+        public override event DataSent OnDataSent;
         private Port p;
+        private Data data_sending;
         public Host(string name)
         {
             Name = name;
@@ -19,19 +22,21 @@ namespace Physical_Layer
             Ports.Add(p);
         }
 
-        //public override event BitSent OnBitSent;
-        //public override event DataSent OnDataSent;
-
         public override void ReadData(Data data, Port p)
         {
-            PhysicalL_Writer.Write_File(1, Name, Ports[0].Name, "receive", data.Voltage, false);
+            PhysicalL_Writer.Write_File(Clock, Name, Ports[0].Name, "receive", data.Voltage, false);
         }
 
-        public override void SendData(Data data, int signal_time)
+        public override void SendData(Data data)
         {
-            PhysicalL_Writer.Write_File(12, Name, p.Name, "send", data.Voltage, false);
-            p.Put_Bit_In_Port(data);
-            //OnBitSent(data);
+            if(data_sending==null || !data_sending.Equals(data))
+            {
+                data_sending = data;
+                PhysicalL_Writer.Write_File(Clock, Name, p.Name, "send", data.Voltage, false);
+                p.Put_Bit_In_Port(data);
+            }
+            OnDataSent();
+            //aqui comprobar si hubo collision haciendo XOR con el cable
         }
     }
 }

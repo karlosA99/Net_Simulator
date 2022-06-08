@@ -8,14 +8,14 @@ using Physical_Layer;
 
 namespace Link_Layer
 {
-    public class Duplex_Wire : Wire
+    public class Duplex_Wire : Wire, IConnector
     {
-        Simple_Wire Channel1 { get; set; }
-        Simple_Wire Channel2 { get; set; }
+        Simple_Wire ASending { get; set; }
+        Simple_Wire BSending { get; set; }
         public Duplex_Wire(Port a, Port b) : base(a, b)
         {
-            Channel1 = new Simple_Wire(a, b);
-            Channel2 = new Simple_Wire(b, a);
+            ASending = new Simple_Wire(a, b);
+            BSending = new Simple_Wire(b, a);
         }
     }
 }

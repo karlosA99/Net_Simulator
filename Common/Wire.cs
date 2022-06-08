@@ -24,6 +24,7 @@ namespace Common
 
         public void ReceiveData(Data data, Port p)
         {
+            if(BitOnWire ==null || !BitOnWire.Equals(data))
             BitOnWire = data;
             if (A.Equals(p))
                 B.ReceiveData(data);

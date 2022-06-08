@@ -25,20 +25,22 @@ namespace Physical_Layer
             }
         }
 
+        public override event DataSent OnDataSent;
+
         public override void ReadData(Data data, Port p)
         {
             receiving_port = p;
-            PhysicalL_Writer.Write_File(1, Name, receiving_port.Name, "receive", receiving_port.DataInPort.Voltage, false);
-            SendData(data, 1);
+            PhysicalL_Writer.Write_File(Clock, Name, receiving_port.Name, "receive", receiving_port.DataInPort.Voltage, false);
+            SendData(data);
         }
 
-        public override void SendData(Data data, int signal_time)
+        public override void SendData(Data data)
         {
             foreach (Port p in Ports)
             {
                 if (!p.Equals(receiving_port) && p.Connector != null)
                 {
-                    PhysicalL_Writer.Write_File(12, Name, p.Name, "send", data.Voltage, false);
+                    PhysicalL_Writer.Write_File(Clock, Name, p.Name, "send", data.Voltage, false);
                     p.Put_Bit_In_Port(data);
                 }
             }

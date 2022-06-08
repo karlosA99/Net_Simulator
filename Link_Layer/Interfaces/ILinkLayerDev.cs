@@ -11,7 +11,7 @@ namespace Link_Layer.Interfaces
     {
         Frame Frame_Recived { get; set; }
 
-        void ReadFrame(int time);
+        void ReadFrame(int port_number);
         void SendFrame(Frame frame);
     }
 }

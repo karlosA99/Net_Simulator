@@ -9,8 +9,10 @@ using Network_Simulator;
 
 namespace Network_Simulator.Instructions
 {
+    
     public class SendI : Instruction
     {
+        
         public SendI(int time, string[] args) : base(time, args){}
 
         public override void Exec(Dictionary<string, Device> devices, List<IConnector> connectors)
@@ -20,9 +22,11 @@ namespace Network_Simulator.Instructions
 
             for (int i = 0; i < datas.Length; i++)
             {
-                //Aqui hay que agregar el for signal_time para enviar signal_time veces la dataz
                 Data data = new Data(int.Parse(datas[i].ToString()));
-                transmitter.SendData(data, Exec_Time);
+                for (int j = Simulator.Signal_Time; j > 0 ; j--)
+                {
+                    transmitter.SendData(data);
+                }
             }          
         } 
     }
