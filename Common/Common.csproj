@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Duplex_Wire.cs" />
     <Compile Include="Data.cs" />
     <Compile Include="Device.cs" />
     <Compile Include="IConnector.cs" />

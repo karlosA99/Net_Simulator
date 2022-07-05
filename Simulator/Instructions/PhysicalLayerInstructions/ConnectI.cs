@@ -22,7 +22,7 @@ namespace Network_Simulator.Instructions
             device = devices[aux2[0]];
             Port port2 = device.Ports[int.Parse(aux2[1]) - 1];
 
-            Wire wire = new Simple_Wire(port1, port2);
+            Duplex_Wire wire = new Duplex_Wire(port1, port2);
             port1.Connector = wire;
             port2.Connector = wire;
             connectors.Add(wire);

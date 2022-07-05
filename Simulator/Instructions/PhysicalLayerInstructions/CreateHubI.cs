@@ -12,9 +12,11 @@ namespace Network_Simulator.Instructions
     {
         public CreateHubI(int time, string[] args) : base(time, args) { }
 
+
         public override void Exec(Dictionary<string, Device> devices, List<IConnector> conectors)
         {
             Hub h = new Hub(Args[0], int.Parse(Args[1]));
+            h.Clock = Simulator.Time;
             devices.Add(h.Name, h);
         }
     }

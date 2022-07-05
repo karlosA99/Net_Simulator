@@ -17,7 +17,7 @@ namespace Link_Layer
                 Address = address;
             }
             else
-                throw new ArgumentOutOfRangeException(address);
+                throw new ArgumentOutOfRangeException("MAC_Address most have a length=4");
         }
 
         public int CompareTo(MAC_Address other)

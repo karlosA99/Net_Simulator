@@ -16,7 +16,8 @@ namespace Network_Simulator.Instructions
 
         public override void Exec(Dictionary<string, Device> devices, List<IConnector> connectors)
         {
-            Switch h = new Switch(Args[0], int.Parse(Args[1]));
+            Switch h = new Switch(Args[0], int.Parse(Args[1]), Simulator.Time);
+            h.signal_time = Simulator.Signal_Time;
             devices.Add(h.Name, h);
         }
     }

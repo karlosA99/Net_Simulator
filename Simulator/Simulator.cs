@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Network_Simulator.Instructions;
+using Physical_Layer.Interfaces;
+using System.Configuration;
 
 namespace Network_Simulator
 {
@@ -12,16 +14,17 @@ namespace Network_Simulator
     {
         private Dictionary<string, Device> devices;
         private List<IConnector> connectors;
-        public static int signal_time;
+        
         private bool finished;
 
         public static int Time { get; set; }
         public string Path { get; set; }
+        public static int Signal_Time { get; private set; }
         internal Queue<Instruction> Instructions { get; set; }
 
         public Simulator()
         {
-            signal_time = 2;
+            Signal_Time= int.Parse(ConfigurationManager.AppSettings.Get("signal_time"));
             finished = false;
             devices = new Dictionary<string, Device>();
             connectors = new List<IConnector>();
@@ -30,26 +33,68 @@ namespace Network_Simulator
         public void Run_Simulation()
         {
             Instructions = Build_Instructions(Helper.Read_File(Path));
-            Instruction current = Instructions.Dequeue();
-            int i_time = signal_time;
             while (!finished)
             {
-                if(current.Exec_Time <= Time)
+                while (Instructions.Count>0 && Instructions.Peek().Exec_Time == Time)
                 {
+                    Instruction current=Instructions.Dequeue();
                     current.Exec(devices, connectors);
-                    
-                    if (Instructions.Count > 0)
-                    {
-                        current = Instructions.Dequeue();
-                    }
-                    else
-                    {
-                        finished = true;
-                    }
                 }
-                Time++;
+                ClockTick();
             }
         }
+
+        private void ClockTick()
+        {
+            foreach(Device sender in devices.Values)
+            {
+                if(sender is ISenderDevice)
+                {
+                    ((ISenderDevice)sender).Update();
+                }
+            }
+
+            foreach (Device sender in devices.Values)
+            {
+                if (sender is ISenderDevice)
+                {
+                    ((ISenderDevice)sender).SaveData();
+                }
+            }
+
+            foreach (Device device in devices.Values)
+            {
+                device.ClockTick();
+            }
+            foreach(IConnector connector in connectors)
+            {
+                if(connector.InCollition)
+                {
+                    connector.CleanConnector();
+                }
+            }
+            finished = Finished();
+            Time++;
+        }
+        private bool Finished()
+        {
+            if (Instructions.Count > 0)
+            {
+                return false;
+            }
+            foreach (Device sender in devices.Values)
+            {
+                if (sender is ISenderDevice)
+                {
+                    if (((ISenderDevice)sender).IsActive())
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         public static Queue<Instruction> Build_Instructions(List<string> lines)
         {
             List<Instruction> q = new List<Instruction>();
@@ -76,7 +121,7 @@ namespace Network_Simulator
                         else if (temp[2] == "host")
                             i = new CreateHostI(time, aux);
 
-                        else if(temp[2]== "switch")
+                        else if (temp[2] == "switch")
                             i = new CreateSwitchI(time, aux);
 
                         break;

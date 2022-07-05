@@ -13,7 +13,7 @@ namespace Common
         {
             foreach (Wire item in wires)
             {
-                item.BitOnWire = null;
+                item.DataInTransmission = null;
             }
         }
 
@@ -52,7 +52,13 @@ namespace Common
             }
             return ans;
         }
-        public static string Int_To_Binary(int data)
+        /// <summary>
+        /// Recibe un entero y devuelve un string con su equivalente en binario 
+        /// </summary>
+        /// <param name="data">Entero que se quiere llevar a binario</param>
+        /// <param name="length">Longitud del string que se devolverá</param>
+        /// <returns></returns>
+        public static string Int_To_Binary(int data, int length)
         {
             string result = "";
             while (data > 0)
@@ -63,6 +69,10 @@ namespace Common
                 else if (reminder == 1)
                     result = "1" + result;
                 data /= 2;
+            }
+            while (result.Length < length)
+            {
+                result="0" + result;
             }
             return result;
         }
@@ -133,29 +143,25 @@ namespace Common
                 switch (temp)
                 {
                     case 'A':
-                        result = result + Int_To_Binary(10);
+                        result = result + Int_To_Binary(10,4);
                         break;
                     case 'B':
-                        result = result + Int_To_Binary(11);
+                        result = result + Int_To_Binary(11,4);
                         break;
                     case 'C':
-                        result = result + Int_To_Binary(12);
+                        result = result + Int_To_Binary(12,4);
                         break;
                     case 'D':
-                        result = result + Int_To_Binary(13);
+                        result = result + Int_To_Binary(13,4);
                         break;
                     case 'E':
-                        result = result + Int_To_Binary(14);
+                        result = result + Int_To_Binary(14,4);
                         break;
                     case 'F':
-                        result = result + Int_To_Binary(15);
+                        result = result + Int_To_Binary(15,4);
                         break;
                     default:
-                        string aux = Int_To_Binary(int.Parse(temp.ToString()));
-                        while (aux.Length < 4)
-                        {
-                            aux = "0" + aux;
-                        }
+                        string aux = Int_To_Binary(int.Parse(temp.ToString()),4);
                         result = result + aux;
                         break;
                 }
@@ -175,6 +181,16 @@ namespace Common
                 }
             }
             return null;
+        }
+
+        public static string StringExtractor(List<Data> datas, int min, int max)
+        {
+            string result = "";
+            for (int i = min; i < max; i++)
+            {
+                result+= datas[i].ToString();
+            }
+            return result;
         }
 
         public static Dictionary<string, Device> Get_NullPi(Dictionary<string, Device> devices)
@@ -227,7 +243,21 @@ namespace Common
             return adj;
         }
 
-
-
+        public static List<Data> String_To_DataList(string datas)
+        {
+            List<Data> result = new List<Data>();
+            foreach(char c in datas)
+            {
+                if (c != '1' && c != '0')
+                {
+                    throw new Exception("Invalid datas format");
+                }
+                else
+                {
+                    result.Add(new Data(int.Parse(c.ToString())));
+                }
+            }
+            return result;
+        }
     }
 }

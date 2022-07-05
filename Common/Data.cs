@@ -24,6 +24,9 @@ namespace Common
             }
             this.Voltage = volt;
         }
-        
+        public override string ToString()
+        {
+            return Voltage.ToString();
+        }
     }
 }

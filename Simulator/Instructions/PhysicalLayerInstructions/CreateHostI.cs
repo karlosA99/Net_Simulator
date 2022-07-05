@@ -15,7 +15,9 @@ namespace Network_Simulator.Instructions
 
         public override void Exec(Dictionary<string, Device> devices, List<IConnector> connectors)
         {
-            HostLL h = new HostLL(Args[0]);
+            HostLL h = new HostLL(Args[0], Simulator.Time);
+            h.signal_time = Simulator.Signal_Time;
+            h.Clock = Simulator.Time;
             devices.Add(h.Name, h);
         }
     }
